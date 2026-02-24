@@ -102,15 +102,65 @@ ros2 action send_goal /task/execute smartfactory_interfaces/action/ExecuteTask "
   - `/jetcobot/pick_and_place/done` (`std_msgs/msg/Bool`)
   - `/jetcobot/assembly/db_update` (`smartfactory_interfaces/msg/SectionResult`)
 
-## 7. 위치 보정(vision_node)
+## 7. 기술 상세
 
-비전 좌표 보정은 `vision_node`에서 수행됩니다.
+### 7.1 vision_node
 
-- 기본 offset: `offset_x`, `offset_y`, `offset_z`
-- 처짐 보정: `sag_coeff`
-- 거리 기반 추가 보정: `dist_threshold`, `extra_offset_x`, `extra_offset_z`
+- 역할: ArUco 마커를 관측해 베이스 좌표계 목표 위치(`base_target_coords`)를 계산하고 `/vision/observe_marker` 액션으로 반환
+- 인식 파이프라인:
+  - `detectMarkers` -> `cornerSubPix`(옵션) -> `solvePnP`
+  - `solvePnP`는 `IPPE_SQUARE` 우선, 실패 시 `ITERATIVE` fallback
+- 샘플 처리/필터링:
+  - 지정 시간 내 다중 샘플(`n_samples`) 수집
+  - `tvec` median 기준 거리 outlier 제거(`outlier_thresh`)
+  - 유효 샘플 평균으로 위치 계산, 자세는 quaternion averaging으로 계산
+  - 참고: 이동평균(MA) 필터는 사용하지 않고, outlier rejection + 평균 방식 사용
+- 좌표 변환:
+  - `T_base_target = T_base_ee @ T_ee_cam @ T_cam_target`
+  - `T_base_ee`: manipulator 서비스(`/manipulator/get_current_coords`)에서 수신
+  - `T_ee_cam`: hand-eye 고정 행렬
+- 위치 보정:
+  - 기본 보정: `offset_x`, `offset_y`, `offset_z`
+  - 처짐 보정: `z += sag_coeff * x`
+  - 거리 기반 추가 보정: `x > dist_threshold`일 때 `extra_offset_x`, `extra_offset_z` 적용
+- 부가 기능:
+  - 계산된 `(x, y)`를 섹션(A/B/C)으로 분류
+  - `/jetcobot/assembly/db_update`로 `SectionResult` 발행
+- 실행 모델:
+  - `ReentrantCallbackGroup` + `MultiThreadedExecutor`
+  - 액션 콜백 내부에서 서비스 호출을 `await`로 처리해 블로킹 최소화
 
-필요 시 `vision_node.py`의 파라미터 값을 조정해 튜닝할 수 있습니다.
+### 7.2 manipulator_node
+
+- 역할: 실제 MyCobot 동작 수행(Pick-and-Place)
+- 하드웨어 연결: `MyCobot280('/dev/ttyJETCOBOT', 1000000)`
+- 제공 인터페이스:
+  - Service: `/manipulator/get_current_coords`
+  - Legacy Service: `/manipulator/execute_pnp`
+  - Action: `/manipulator/execute_pnp_action`
+- 모션 시퀀스:
+  - gripper open -> pick coords -> gripper close -> via pose -> place coords -> gripper open -> home pose
+  - `send_coords`, `send_angles` 후 `sleep` 기반 동기 시퀀스 제어
+- 주요 파라미터:
+  - 속도: `speed_fast`, `speed_slow`
+  - 그리퍼: `gripper_open`, `gripper_close`
+  - 자세: `home_pose`, `via_pose`
+
+### 7.3 task_manager_node
+
+- 역할: vision/manipulator를 액션 체인으로 묶는 상위 오케스트레이터
+- 액션 서버: `/task/execute`
+- GUI/토픽 트리거:
+  - `/jetcobot/assembly/stack/request`에서 `Int32(data=1)` 수신 시 `ExecuteTask(marker_ids=[1,2,3], reset_stack=True)` 전송
+- 내부 FSM 흐름:
+  - marker loop -> vision 호출 -> pregrasp 생성 -> pnp 호출 -> stack level 증가
+  - 취소/실패 시 즉시 abort 및 FSM reset
+- 전략/좌표 생성:
+  - `make_pregrasp`: target 기준 z +110mm 오프셋, x축 185도 회전, ee yaw +45도
+  - `make_place_pose`: `assembly_pose` 기준으로 `stack_dz_mm`와 `stack_level`에 따라 적층 z 오프셋 계산
+- 상태 토픽:
+  - `/assembly_start`에 동작 상태 주기 발행
+  - 완료 시 `/jetcobot/pick_and_place/done` 발행
 
 ## 8. 트러블슈팅
 
@@ -133,4 +183,3 @@ sudo apt install --only-upgrade -y \
 - 로봇 연결 실패
   - `/dev/ttyJETCOBOT` 권한/장치명 확인
   - 케이블/전원 연결 상태 확인
-
