@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
-project(mycobot_system_interfaces)
+# project(jetcobot_interfaces)
+project(smartfactory_interfaces)
+
 
 # 기본 빌드 옵션 (있어도 되고 없어도 됨)
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -14,6 +16,9 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   srv/ObserveMarkerPose.srv
   srv/ExecutePnP.srv
+
+  # ---- msgs ----
+  msg/SectionResult.msg
 
   # ---- Actions ----
   action/ExecutePnP.action

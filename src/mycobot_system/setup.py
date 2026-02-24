@@ -35,6 +35,7 @@ setup(
             'vision_node = mycobot_system.vision_node:main',
             'manipulator_node = mycobot_system.manipulator_node:main',
             'task_manager_node = mycobot_system.task_manager_node:main',
+            'pick_and_place_trigger_node = mycobot_system.pick_and_place_trigger_node:main',
         ],
     },
 )

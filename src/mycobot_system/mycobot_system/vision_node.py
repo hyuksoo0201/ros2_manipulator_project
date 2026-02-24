@@ -13,8 +13,14 @@ from rclpy.executors import MultiThreadedExecutor
 from scipy.spatial.transform import Rotation as R
 from ament_index_python.packages import get_package_share_directory
 
-from mycobot_system_interfaces.action import ObserveMarker
-from mycobot_system_interfaces.srv import GetCurrentCoords
+# from jetcobot_interfaces.action import ObserveMarker
+# from jetcobot_interfaces.srv import GetCurrentCoords
+# from jetcobot_interfaces.msg import SectionResult
+
+from smartfactory_interfaces.action import ObserveMarker
+from smartfactory_interfaces.srv import GetCurrentCoords
+from smartfactory_interfaces.msg import SectionResult
+
 
 # ==================================================
 # Utility (동일)
@@ -78,8 +84,8 @@ class VisionNode(Node):
         self.declare_parameter('do_subpix', True)
 
         self.declare_parameter('offset_x', -0.012)
-        self.declare_parameter('offset_y', -0.005)
-        self.declare_parameter('offset_z', -0.018)
+        self.declare_parameter('offset_y', -0.007)
+        self.declare_parameter('offset_z', -0.023)
         self.declare_parameter('sag_coeff', 0.09)
 
         self.declare_parameter('dist_threshold', 0.22)   # 22cm 기준
@@ -125,6 +131,15 @@ class VisionNode(Node):
             [ 0.0,     0.0,    0.0,  1.0    ]
         ], dtype=float)
 
+        # ---------------- DB update topic ----------------
+        self.db_pub = self.create_publisher(
+            SectionResult,
+            # '/jetcobot/assembly/db_update',
+            '/jetcobot/assembly/db_update',
+            10
+        )
+
+
         # ---------------- Service Client (Callback Group 적용) ----------------
         self.coords_cli = self.create_client(
             GetCurrentCoords, 
@@ -145,6 +160,44 @@ class VisionNode(Node):
 
         self.get_logger().info("👀 Vision Node Initialized with Multi-threading")
 
+    # ---------------- Section Classification ----------------
+    def classify_section(self, x_m: float, y_m: float):
+        section_centers = {
+            # ("A", 1): (0.23781751694392866,  0.005020475948445496),
+            ("A", 1): (0.15790524245835882,  -0.0017191770956796783),
+            ("A", 2): (0.2828007676862617,   0.0065217138851096056),
+            ("A", 3): (0.32454790312282095,  0.009331413706595664),
+
+            ("B", 1): (0.15338815569746786, -0.05724197420221029),
+            ("B", 2): (0.19567735731776645, -0.05395115480071706),
+            ("B", 3): (0.23414924255243028, -0.05313336349773359),
+
+            ("C", 1): (0.15314696106941145, -0.128611351270929),
+            ("C", 2): (0.19358146932409173, -0.12353170613596874),
+            ("C", 3): (0.3179742518793567,  -0.1257460945504737),
+        }
+
+
+        min_dist = float("inf")
+        best_section = None
+        best_id = None
+
+        for (section, idx), (cx, cy) in section_centers.items():
+            dist = np.sqrt((x_m - cx)**2 + (y_m - cy)**2)
+
+            if dist < min_dist:
+                min_dist = dist
+                best_section = section
+                best_id = idx
+
+        # # 5cm 이상이면 무효 처리 (선택사항)
+        # if min_dist > 0.05:
+        #     self.get_logger().warn(f"⚠ No valid section (dist={min_dist:.3f}m)")
+        #     return None, None
+
+        return best_section, best_id
+
+
     def goal_cb(self, goal):
         return GoalResponse.ACCEPT
 
@@ -154,6 +207,16 @@ class VisionNode(Node):
     # ✅ async/await 방식으로 변경하여 Blocking 제거
     async def execute_cb(self, goal_handle):
         goal = goal_handle.request
+
+
+
+        self.get_logger().info(
+            f"🔥 Vision execute_cb START marker_id={goal.marker_id}"
+        )
+
+
+
+
         feedback = ObserveMarker.Feedback()
         
         marker_id = int(goal.marker_id)
@@ -239,6 +302,8 @@ class VisionNode(Node):
         T_base_target[0, 3] += float(self.get_parameter('offset_x').value) # -= 0.015
         T_base_target[1, 3] += float(self.get_parameter('offset_y').value) # -= 0.010
         T_base_target[2, 3] += float(self.get_parameter('offset_z').value) # -= 0.023
+        print(T_base_target[0, 3])
+        print(T_base_target[1, 3])
 
         T_base_target[2, 3] += float(self.get_parameter('sag_coeff').value) * T_base_target[0, 3]
 
@@ -247,6 +312,31 @@ class VisionNode(Node):
             self.get_logger().info(f"📏 Threshold exceeded ({T_base_target[0, 3]:.3f}m). Applying extra offsets.")
             T_base_target[0, 3] += float(self.get_parameter('extra_offset_x').value) # += 0.003
             T_base_target[2, 3] += float(self.get_parameter('extra_offset_z').value) # += 0.005
+
+        # ---- Section classification & DB publish ----
+        x_m = float(T_base_target[0, 3])
+        y_m = float(T_base_target[1, 3])
+
+        section, idx = self.classify_section(x_m, y_m)
+
+        if section is not None:
+            msg = SectionResult()
+            self.get_logger().info("🔥 DB_PUBLISH about to execute")
+
+
+
+            msg.section = section
+            msg.id = int(idx)
+            msg.occupy = 0  # pick이므로 제거
+            self.db_pub.publish(msg)
+
+            self.get_logger().info(
+                f"[DB_UPDATE] section={section}, id={idx}, occupy=0"
+            )
+        else:
+            self.get_logger().warn(
+                f"[DB_UPDATE] No matching section for x={x_m:.3f}, y={y_m:.3f}"
+            )
 
         feedback.stage = "DONE"
         goal_handle.publish_feedback(feedback)

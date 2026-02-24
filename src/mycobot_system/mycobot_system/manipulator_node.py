@@ -6,9 +6,14 @@ from rclpy.node import Node
 from rclpy.action import ActionServer, GoalResponse, CancelResponse
 
 from pymycobot.mycobot280 import MyCobot280
-from mycobot_system_interfaces.srv import ExecutePnP as ExecutePnPService
-from mycobot_system_interfaces.srv import GetCurrentCoords
-from mycobot_system_interfaces.action import ExecutePnP as ExecutePnPAction
+
+# from jetcobot_interfaces.srv import ExecutePnP as ExecutePnPService
+# from jetcobot_interfaces.srv import GetCurrentCoords
+# from jetcobot_interfaces.action import ExecutePnP as ExecutePnPAction
+
+from smartfactory_interfaces.srv import ExecutePnP as ExecutePnPService
+from smartfactory_interfaces.srv import GetCurrentCoords
+from smartfactory_interfaces.action import ExecutePnP as ExecutePnPAction
 
 
 class ManipulatorNode(Node):
