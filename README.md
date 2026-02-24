@@ -40,6 +40,9 @@ source install/setup.bash
 ## 🎬 Demo Video
 
 https://www.youtube.com/watch?v=Ma1Qjp9Qrbk&si=AKAygBHIJUH43ac_
+
+[![Watch the demo](https://img.youtube.com/vi/영상ID/0.jpg)](https://www.youtube.com/watch?v=영상ID)
+
 ### A. 런치 파일로 3노드 동시 실행
 
 ```bash
