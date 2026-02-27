@@ -48,6 +48,7 @@ https://www.youtube.com/watch?v=Ma1Qjp9Qrbk&si=AKAygBHIJUH43ac_
 ```bash
 cd ~/ros2_ws
 source /opt/ros/jazzy/setup.bash
+colcon build
 source install/setup.bash
 ros2 launch mycobot_system assembly_task.launch.py
 ```
@@ -80,16 +81,16 @@ ros2 run mycobot_system task_manager_node
 
 ## 5. Stack 작업 트리거
 
-### 방법 1. 토픽 트리거 (GUI 연동 방식)
-
-```bash
-ros2 topic pub --once /jetcobot/assembly/stack/request std_msgs/msg/Int32 "{data: 1}"
-```
-
-### 방법 2. 액션 직접 호출
+### 방법 1. 액션 직접 호출
 
 ```bash
 ros2 action send_goal /task/execute smartfactory_interfaces/action/ExecuteTask "{marker_ids: [1, 2, 3], reset_stack: true}"
+```
+
+### 방법 2. 토픽 트리거 (GUI 연동 방식)
+
+```bash
+ros2 topic pub --once /jetcobot/assembly/stack/request std_msgs/msg/Int32 "{data: 1}"
 ```
 
 ## 6. 주요 인터페이스
