@@ -13,6 +13,10 @@ ArUco 기반 마커 인식 후 Pick-and-Place stacking 작업을 수행합니다
 </p>
 
 
+## 이론
+<img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/cab8721b-30fe-430d-9141-e3706ae90709" />
+
+
 ## 1. 구성
 
 - `src/mycobot_system`: 실행 노드(vision/manipulator/task_manager/trigger), launch 파일
