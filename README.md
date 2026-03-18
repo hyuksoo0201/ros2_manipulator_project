@@ -15,8 +15,8 @@ ArUco 기반 마커 인식 후 Pick-and-Place stacking 작업을 수행합니다
 
 ## 이론
 <img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/cab8721b-30fe-430d-9141-e3706ae90709" />
-![KakaoTalk_20260302_120033338](https://github.com/user-attachments/assets/d45175d4-3395-4eca-b6b1-52346ec7162e)
-![KakaoTalk_20260302_120033338_01](https://github.com/user-attachments/assets/c1a96c7e-e5d7-4d36-94b6-495aa937913b)
+# ![KakaoTalk_20260302_120033338](https://github.com/user-attachments/assets/d45175d4-3395-4eca-b6b1-52346ec7162e)
+# ![KakaoTalk_20260302_120033338_01](https://github.com/user-attachments/assets/c1a96c7e-e5d7-4d36-94b6-495aa937913b)
 
 ## 1. 구성
 
