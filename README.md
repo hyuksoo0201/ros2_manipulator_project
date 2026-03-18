@@ -129,7 +129,7 @@ ros2 topic pub --once /jetcobot/assembly/stack/request std_msgs/msg/Int32 "{data
   - 지정 시간 내 다중 샘플(`n_samples`) 수집
   - `tvec` median 기준 거리 outlier 제거(`outlier_thresh`)
   - 유효 샘플 평균으로 위치 계산, 자세는 quaternion averaging으로 계산
-  - 참고: 이동평균(MA) 필터는 사용하지 않고, outlier rejection + 평균 방식 사용
+  - 참고: outlier rejection + 평균 방식 사용
 - 좌표 변환:
   - `T_base_target = T_base_ee @ T_ee_cam @ T_cam_target`
   - `T_base_ee`: manipulator 서비스(`/manipulator/get_current_coords`)에서 수신
