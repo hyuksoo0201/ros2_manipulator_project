@@ -1,6 +1,6 @@
 # ROS2 Manipulator Project
 
-MyCobot 280 기반 비전–매니퓰레이션–태스크 통합 ROS2 워크스페이스입니다.  
+MyCobot 280 기반 비전-매니퓰레이션-작업 통합 ROS2 워크스페이스입니다.  
 ArUco 기반 마커 인식 후 Pick-and-Place stacking 작업을 수행합니다.
 
 
