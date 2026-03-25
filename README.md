@@ -23,7 +23,7 @@ Tbase→target​=Tbase→ee​⋅Tee→cam​⋅Tcam→target
 ### 1. Hand–Eye Calibration
 
 로봇 좌표계와 카메라 좌표계를 정합하기 위해 다음 변환 관계를 사용하였다.
-
+T_base→target = T_base→ee · T_ee→cam · T_cam→target
 \[
 T_{base \rightarrow target} 
 = T_{base \rightarrow ee} 
