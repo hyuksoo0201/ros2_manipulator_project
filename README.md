@@ -14,6 +14,69 @@ ArUco 기반 마커 인식 후 Pick-and-Place stacking 작업을 수행합니다
 
 
 ## 이론
+1. Hand–Eye Calibration
+로봇 좌표계와 카메라 좌표계를 정합하기 위해 다음 변환 관계를 사용하였다.
+Tbase→target​=Tbase→ee​⋅Tee→cam​⋅Tcam→target
+
+## 📘 Theory
+
+### 1. Hand–Eye Calibration
+
+로봇 좌표계와 카메라 좌표계를 정합하기 위해 다음 변환 관계를 사용하였다.
+
+\[
+T_{base \rightarrow target} 
+= T_{base \rightarrow ee} 
+\cdot T_{ee \rightarrow cam} 
+\cdot T_{cam \rightarrow target}
+\]
+
+- \( T_{base \rightarrow ee} \): 로봇 Forward Kinematics  
+- \( T_{ee \rightarrow cam} \): Hand–Eye Calibration 결과  
+- \( T_{cam \rightarrow target} \): Vision (PnP) 결과  
+
+이를 통해 카메라에서 검출한 객체 위치를 로봇 base 좌표계로 변환하였다.
+
+---
+
+### 2. Pose Refinement
+
+#### (1) Heatmap 기반 Z-axis 보정
+
+Vision 기반 위치 추정에서 작업 영역에 따라 Z-axis 오차가 달라지는 문제가 발생하였다.  
+이를 해결하기 위해 작업 공간 전체에서 오차를 샘플링하고 heatmap으로 분석하였다.
+
+<img width="500" alt="heatmap" src="여기에_heatmap_이미지_URL" />
+
+- 위치별 Z 오차 분포 시각화  
+- plane fitting 기반 보정 모델 적용  
+- 위치 의존적 오차 제거  
+
+---
+
+#### (2) Moving Average Filter (MAF)
+
+센서 노이즈로 인한 위치 jitter를 줄이기 위해 Moving Average Filter를 적용하였다.
+
+\[
+\hat{x}_k = \frac{1}{N} \sum_{i=0}^{N-1} x_{k-i}
+\]
+
+<img width="500" alt="maf" src="여기에_MAF_이미지_URL" />
+
+- 고주파 노이즈 제거  
+- 안정적인 pose 추정  
+- 제어 입력 진동 감소  
+
+---
+
+### 3. Result
+
+| 항목 | 개선 전 | 개선 후 |
+|------|--------|--------|
+| Grasp 오차 | 2 cm | 0.5 cm |
+| 안정성 | 낮음 | 높음 |
+​
 
 <img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/cab8721b-30fe-430d-9141-e3706ae90709" />
 
