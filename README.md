@@ -14,11 +14,6 @@ ArUco 기반 마커 인식 후 Pick-and-Place stacking 작업을 수행합니다
 
 
 ## 이론
-1. Hand–Eye Calibration
-로봇 좌표계와 카메라 좌표계를 정합하기 위해 다음 변환 관계를 사용하였다.
-
-## 📘 Theory
-
 ### 1. Hand–Eye Calibration
 
 로봇 좌표계와 카메라 좌표계를 정합하기 위해 다음 변환 관계를 사용하였다.
