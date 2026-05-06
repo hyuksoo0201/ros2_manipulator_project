@@ -1,4 +1,4 @@
-<img width="1333" height="800" alt="heatmap" src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" /># Vision-Guided Manipulator Project
+# Vision-Guided Manipulator Project
 
 This project implements a ROS2-based vision-guided pick-and-place system using MyCobot 280 and ArUco marker detection.
 
@@ -34,7 +34,7 @@ ArUco 기반 마커 인식 후 Pick-and-Place stacking 작업을 수행합니다
 ### 1. Hand–Eye Calibration
 
 로봇 좌표계와 카메라 좌표계를 정합하기 위해 다음 변환 관계를 사용하였다.
-
+<img width="1333" height="800" alt="heatmap" src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" />
 <img width="548" height="319" alt="image" src="https://github.com/user-attachments/assets/fa1effb0-8b4d-4657-b71c-00cde65ecfac" />
 
 T_base→target = T_base→ee · T_ee→cam · T_cam→target
