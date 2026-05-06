@@ -5,7 +5,7 @@ This project implements a ROS2-based vision-guided pick-and-place system using M
 ## Key Contributions
 
 - Integrated vision, manipulator control, and task management in ROS2.
-- Applied hand-eye calibration to transform camera-detected target poses into the robot base frame.
+- Applied camera and hand-eye calibration to align the camera coordinate system with the robot base frame.
 - Improved grasping accuracy from 2 cm to 0.5 cm using heatmap-based Z-axis compensation and moving average filtering.
 - Implemented an Action/Service-based modular architecture for repeated pick-and-place stacking tasks.
 
