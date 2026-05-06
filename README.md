@@ -54,6 +54,14 @@ Vision 기반 위치 추정에서 작업 영역에 따라 Z-axis 오차가 달�
 
 <img width="1333" height="800" alt="heatmap" src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" />
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" width="600" alt="heatmap" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" width="500" alt="heatmap" />
+</p>
+
 - 위치별 Z 오차 분포 시각화  
 - plane fitting 기반 보정 모델 적용  
 - 위치 의존적 오차 제거  
