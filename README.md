@@ -52,14 +52,8 @@ T_base→target = T_base→ee · T_ee→cam · T_cam→target
 Vision 기반 위치 추정에서 작업 영역에 따라 Z-axis 오차가 달라지는 문제가 발생하였다.  
 이를 해결하기 위해 작업 공간 전체에서 오차를 샘플링하고 heatmap으로 분석하였다.
 
-<img width="1333" height="800" alt="heatmap" src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" />
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" width="600" alt="heatmap" />
-</p>
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" width="500" alt="heatmap" />
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" width="700" alt="heatmap" />
 </p>
 
 - 위치별 Z 오차 분포 시각화  
