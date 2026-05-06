@@ -1,4 +1,4 @@
-# Vision-Guided Manipulator Project
+<img width="1333" height="800" alt="heatmap" src="https://github.com/user-attachments/assets/e156e821-d12c-48b0-809b-ae6741b90b6b" /># Vision-Guided Manipulator Project
 
 This project implements a ROS2-based vision-guided pick-and-place system using MyCobot 280 and ArUco marker detection.
 
@@ -52,6 +52,7 @@ T_base→target = T_base→ee · T_ee→cam · T_cam→target
 Vision 기반 위치 추정에서 작업 영역에 따라 Z-axis 오차가 달라지는 문제가 발생하였다.  
 이를 해결하기 위해 작업 공간 전체에서 오차를 샘플링하고 heatmap으로 분석하였다.
 
+<img width="1333" height="800" alt="heatmap" src="https://github.com/user-attachments/assets/fa7cdb34-9dde-4e99-b610-55016dbbb106" />
 <img width="309" height="310" alt="image" src="https://github.com/user-attachments/assets/29409dfd-a698-42fb-8bd6-02d5e3bf1398" />
 
 - 위치별 Z 오차 분포 시각화  
