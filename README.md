@@ -1,4 +1,4 @@
-# ROS2 Vision-Guided Manipulator Project
+# Vision-Guided Manipulator Project
 
 This project implements a ROS2-based vision-guided pick-and-place system using MyCobot 280 and ArUco marker detection.
 
