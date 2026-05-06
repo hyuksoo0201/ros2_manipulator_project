@@ -2,15 +2,20 @@
 
 This project implements a ROS2-based vision-guided pick-and-place system using MyCobot 280 and ArUco marker detection.
 
-Key contributions:
+## Key Contributions
+
 - Integrated vision, manipulator control, and task management in ROS2.
 - Applied hand-eye calibration to transform camera-detected target poses into the robot base frame.
 - Improved grasping accuracy from 2 cm to 0.5 cm using heatmap-based Z-axis compensation and moving average filtering.
-- Implemented Action/Service-based modular architecture for repeated pick-and-place stacking tasks.
+- Implemented an Action/Service-based modular architecture for repeated pick-and-place stacking tasks.
 
-Tech Stack: ROS2 Jazzy, Python, OpenCV, ArUco, MyCobot 280
+## Tech Stack
 
-# ROS2 Manipulator Project
+ROS2 Jazzy, Python, OpenCV, ArUco, MyCobot 280
+
+---
+
+## 프로젝트 개요
 
 MyCobot 280 기반 비전-매니퓰레이션-작업 통합 ROS2 워크스페이스입니다.  
 ArUco 기반 마커 인식 후 Pick-and-Place stacking 작업을 수행합니다.
