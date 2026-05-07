@@ -11,7 +11,7 @@ This project implements a ROS2-based vision-guided pick-and-place system using M
 
 ## Tech Stack
 
-ROS2 Jazzy, Python, OpenCV, ArUco, MyCobot 280
+Ubuntu, ROS2 Jazzy, Python, OpenCV, ArUco, MyCobot 280
 
 ---
 
